@@ -2,12 +2,11 @@ package com.hotbitmapgg.ohmybilibili.module.home.recommend;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.hotbitmapgg.ohmybilibili.R;
 import com.hotbitmapgg.ohmybilibili.adapter.HotVideoIndexRecyclerAdapter;
-import com.hotbitmapgg.ohmybilibili.adapter.base.AbsRecyclerViewAdapter;
 import com.hotbitmapgg.ohmybilibili.base.RxLazyFragment;
 import com.hotbitmapgg.ohmybilibili.entity.index.Index;
 import com.hotbitmapgg.ohmybilibili.entity.video.VideoItemInfo;
@@ -20,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.Bind;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by hcc on 16/8/11 20:23
@@ -80,27 +78,12 @@ public class HotVideoIndexDetailsFragment extends RxLazyFragment
     {
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mSwipeRefreshLayout.postDelayed(new Runnable()
-        {
+        mSwipeRefreshLayout.postDelayed(() -> {
 
-            @Override
-            public void run()
-            {
-
-                mSwipeRefreshLayout.setRefreshing(true);
-                initData();
-            }
+            mSwipeRefreshLayout.setRefreshing(true);
+            initData();
         }, 500);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-
-            @Override
-            public void onRefresh()
-            {
-
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mSwipeRefreshLayout.setRefreshing(false));
     }
 
     private void initData()
@@ -119,15 +102,9 @@ public class HotVideoIndexDetailsFragment extends RxLazyFragment
 
         Observable.timer(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>()
-                {
+                .subscribe(aLong -> {
 
-                    @Override
-                    public void call(Long aLong)
-                    {
-
-                        initRecyclerView();
-                    }
+                    initRecyclerView();
                 });
     }
 
@@ -137,18 +114,11 @@ public class HotVideoIndexDetailsFragment extends RxLazyFragment
         mSwipeRefreshLayout.setRefreshing(false);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setNestedScrollingEnabled(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         HotVideoIndexRecyclerAdapter mAdapter = new HotVideoIndexRecyclerAdapter(mRecyclerView, videoItemInfos);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new AbsRecyclerViewAdapter.OnItemClickListener()
-        {
-
-            @Override
-            public void onItemClick(int position, AbsRecyclerViewAdapter.ClickableViewHolder holder)
-            {
-
-                VideoDetailsActivity.launch(getActivity(), videoItemInfos.get(position).aid);
-            }
-        });
+        mAdapter.setOnItemClickListener((position, holder) -> VideoDetailsActivity.launch(getActivity(),
+                videoItemInfos.get(position).aid,
+                videoItemInfos.get(position).pic));
     }
 }

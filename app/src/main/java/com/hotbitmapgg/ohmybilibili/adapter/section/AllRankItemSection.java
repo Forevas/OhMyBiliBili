@@ -1,5 +1,6 @@
 package com.hotbitmapgg.ohmybilibili.adapter.section;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -73,20 +74,15 @@ public class AllRankItemSection extends StatelessSection
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.bili_default_image_tv)
+                .dontAnimate()
                 .into(itemViewHolder.mImageView);
+
         itemViewHolder.mTitle.setText(videos.getTitle());
         itemViewHolder.mPlay.setText(String.valueOf(videos.getPlay()));
         itemViewHolder.mReview.setText(String.valueOf(videos.getReview()));
-        itemViewHolder.mCardView.setOnClickListener(new View.OnClickListener()
-        {
-
-            @Override
-            public void onClick(View v)
-            {
-
-                VideoDetailsActivity.launch((Activity) mContext, Integer.valueOf(videos.getAid()));
-            }
-        });
+        itemViewHolder.mCardView.setOnClickListener(v -> VideoDetailsActivity.
+                launch((Activity) mContext,
+                Integer.valueOf(videos.getAid()), videos.getPic()));
     }
 
 
@@ -97,6 +93,7 @@ public class AllRankItemSection extends StatelessSection
         return new HeaderViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder)
     {
@@ -106,7 +103,7 @@ public class AllRankItemSection extends StatelessSection
         headerViewHolder.mTypeText.setText(title + "区排行榜");
     }
 
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder
+    static class HeaderViewHolder extends RecyclerView.ViewHolder
     {
 
         @Bind(R.id.item_type_img)
@@ -115,7 +112,7 @@ public class AllRankItemSection extends StatelessSection
         @Bind(R.id.item_type_tv)
         TextView mTypeText;
 
-        public HeaderViewHolder(View itemView)
+        HeaderViewHolder(View itemView)
         {
 
             super(itemView);
