@@ -13,7 +13,6 @@ import com.hotbitmapgg.ohmybilibili.adapter.section.AllRankItemSection;
 import com.hotbitmapgg.ohmybilibili.base.RxAppCompatBaseActivity;
 import com.hotbitmapgg.ohmybilibili.entity.rank.AllRankInfo;
 import com.hotbitmapgg.ohmybilibili.network.RetrofitHelper;
-import com.hotbitmapgg.ohmybilibili.utils.LogUtil;
 import com.hotbitmapgg.ohmybilibili.widget.sectioned.SectionedRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -21,14 +20,13 @@ import java.util.List;
 
 import butterknife.Bind;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
  * Created by hcc on 16/9/12 20:19
  * 100332338@qq.com
  * <p/>
- * 全区排行榜 从发现界面按钮进入
+ * 全区排行榜
  */
 public class AllRankActivity extends RxAppCompatBaseActivity
 {
@@ -77,27 +75,12 @@ public class AllRankActivity extends RxAppCompatBaseActivity
     {
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mSwipeRefreshLayout.post(new Runnable()
-        {
+        mSwipeRefreshLayout.post(() -> {
 
-            @Override
-            public void run()
-            {
-
-                mSwipeRefreshLayout.setRefreshing(true);
-                getAllRank();
-            }
+            mSwipeRefreshLayout.setRefreshing(true);
+            getAllRank();
         });
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-
-            @Override
-            public void onRefresh()
-            {
-
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mSwipeRefreshLayout.setRefreshing(false));
     }
 
     private void initRecyclerView()
@@ -132,28 +115,16 @@ public class AllRankActivity extends RxAppCompatBaseActivity
 
         RetrofitHelper.getAllRankApi()
                 .getAllRankInfos()
-                .compose(this.<List<AllRankInfo>> bindToLifecycle())
+                .compose(this.bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<List<AllRankInfo>>()
-                {
+                .subscribe(allRankInfos -> {
 
-                    @Override
-                    public void call(List<AllRankInfo> allRankInfos)
-                    {
+                    allRankList.addAll(allRankInfos);
+                    finishTask();
+                }, throwable -> {
 
-                        allRankList.addAll(allRankInfos);
-                        finishTask();
-                    }
-                }, new Action1<Throwable>()
-                {
 
-                    @Override
-                    public void call(Throwable throwable)
-                    {
-
-                        LogUtil.all("获取全区排行榜视频失败" + throwable.getMessage());
-                    }
                 });
     }
 

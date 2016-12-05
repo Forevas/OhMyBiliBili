@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hotbitmapgg.ohmybilibili.R;
-import com.hotbitmapgg.ohmybilibili.adapter.base.AbsRecyclerViewAdapter;
+import com.hotbitmapgg.ohmybilibili.adapter.helper.AbsRecyclerViewAdapter;
 import com.hotbitmapgg.ohmybilibili.entity.game.GameItem;
 import com.hotbitmapgg.ohmybilibili.module.common.WebActivity;
 
@@ -57,25 +57,17 @@ public class GameCentreAdapter extends AbsRecyclerViewAdapter
 
             Glide.with(getContext())
                     .load(gameItem.imageRes)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.bili_default_image_tv)
+                    .dontAnimate()
                     .into(mHolder.mImageView);
 
             mHolder.mTitle.setText(gameItem.name);
             mHolder.mDesc.setText(gameItem.desc);
-            mHolder.mButton.setOnClickListener(new View.OnClickListener()
-            {
-
-                @Override
-                public void onClick(View v)
-                {
-
-                    WebActivity.
-                            launch((Activity) getContext(),
-                                    gameItem.path, gameItem.name);
-                }
-            });
+            mHolder.mButton.setOnClickListener(v -> WebActivity.
+                    launch((Activity) getContext(),
+                            gameItem.path, gameItem.name));
         }
 
         super.onBindViewHolder(holder, position);
@@ -91,13 +83,13 @@ public class GameCentreAdapter extends AbsRecyclerViewAdapter
     public class ItemViewHolder extends AbsRecyclerViewAdapter.ClickableViewHolder
     {
 
-        public ImageView mImageView;
+        ImageView mImageView;
 
-        public TextView mTitle;
+        TextView mTitle;
 
-        public TextView mDesc;
+        TextView mDesc;
 
-        public Button mButton;
+        Button mButton;
 
 
         public ItemViewHolder(View itemView)

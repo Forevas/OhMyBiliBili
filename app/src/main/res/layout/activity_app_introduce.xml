@@ -17,6 +17,7 @@
             android:layout_height="@dimen/appbar_parallax_max_height"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:collapsedTitleTextAppearance="@style/ToolBar.TitleText"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleTextAppearance="@style/CollapsingToolbarTitleStyle.About"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -31,7 +32,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/appbar_parallax_max_height"
-                    android:background="@drawable/bg_live_sign_in_banner"
+                    android:background="@drawable/ic_group_header_bg"
                     android:fitsSystemWindows="true"
                     android:gravity="top|center"
                     android:orientation="vertical" />
@@ -53,7 +54,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:minHeight="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:titleTextAppearance="@style/ToolBar.TitleText" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
